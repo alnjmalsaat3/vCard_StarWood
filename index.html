@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محمد إسماعيل إبراهيم أمين</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon" id="dark-mode-icon"></i>
+            </button>
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="profile-img" id="logo">
+            </div>
+            <h1 id="name"></h1>
+            <h2 id="title"></h2>
+            <div class="contact-details">
+                <div class="detail-item website-item">
+                    <i class="fas fa-globe" aria-hidden="true"></i>
+                    <span><a id="website" href="#" target="_blank">الموقع</a></span>
+                </div>
+                <div class="detail-item website-item">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <span><a id="info" href="#" target="_blank">معلومات</a></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                    <span><a id="whatsapp" href="#" target="_blank">تواصل عبر واتساب</a></span>
+                </div>
+            </div>
+            <button class="vcard-btn" onclick="downloadVCard()">تحميل VCard</button>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/a22154ddf9.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      </script>
+      <script defer src="/_vercel/insights/script.js"></script>
+
+</body>
+</html>
