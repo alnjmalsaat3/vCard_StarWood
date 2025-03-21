@@ -14,7 +14,6 @@ fetch('data.json')
             whatsapp: data.whatsapp || ''
         };
 
-        // Populate name and title directly (assuming they always exist)
         const nameElement = document.getElementById('name');
         if (nameElement) {
             nameElement.textContent = elements.name;
@@ -24,7 +23,6 @@ fetch('data.json')
             titleElement.textContent = elements.title;
         }
 
-        // Populate the links, but only if their elements exist
         const emailElement = document.getElementById('email');
         if (emailElement) {
             emailElement.href = `mailto:${elements.email}`;
@@ -34,11 +32,13 @@ fetch('data.json')
         const websiteElement = document.getElementById('website');
         if (websiteElement) {
             websiteElement.href = elements.website;
+            websiteElement.textContent = elements.website;
         }
 
         const whatsappElement = document.getElementById('whatsapp');
         if (whatsappElement) {
             whatsappElement.href = `https://wa.me/${elements.whatsapp}`;
+            whatsappElement.textContent = elements.whatsapp;
         }
 
 
