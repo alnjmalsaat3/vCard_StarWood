@@ -14,22 +14,33 @@ fetch('data.json')
             whatsapp: data.whatsapp || ''
         };
 
-        Object.keys(elements).forEach(key => {
-            const element = document.getElementById(key);
-            if (element) {
-                if (key === 'email') {
-                     element.href = `mailto:${elements[key]}`;
-                     element.textContent = elements[key];
+        // Populate name and title directly (assuming they always exist)
+        const nameElement = document.getElementById('name');
+        if (nameElement) {
+            nameElement.textContent = elements.name;
+        }
+        const titleElement = document.getElementById('title');
+        if (titleElement) {
+            titleElement.textContent = elements.title;
+        }
 
-                } else if (key === 'website') {
-                    element.href = elements[key];
-                } else if (key === 'whatsapp') {
-                    element.href = `https://wa.me/${elements[key]}`;
-                } else {
-                    element.textContent = elements[key];
-                }
-            }
-        });
+        // Populate the links, but only if their elements exist
+        const emailElement = document.getElementById('email');
+        if (emailElement) {
+            emailElement.href = `mailto:${elements.email}`;
+            emailElement.textContent = elements.email;
+        }
+
+        const websiteElement = document.getElementById('website');
+        if (websiteElement) {
+            websiteElement.href = elements.website;
+        }
+
+        const whatsappElement = document.getElementById('whatsapp');
+        if (whatsappElement) {
+            whatsappElement.href = `https://wa.me/${elements.whatsapp}`;
+        }
+
 
         window.downloadVCard = function() {
             const vCardData = [
@@ -38,8 +49,8 @@ fetch('data.json')
                 `N:${(elements.name || '').split(' ').reverse().join(';')}`,
                 `FN:${elements.name}`,
                 `TITLE:${elements.title}`,
-                `EMAIL;TYPE=WORK:${elements.email}`,
-                elements.website && `URL:${elements.website}`,
+                elements.email ? `EMAIL;TYPE=WORK:${elements.email}` : '',
+                elements.website ? `URL:${elements.website}` : '',
                 `TEL;TYPE=CELL:${elements.whatsapp}`,
                 'END:VCARD'
             ].filter(line => line).join('\n');
