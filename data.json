@@ -1,8 +1,13 @@
 {
-    "name": "Starwood For Timber",
+    "company": "Starwood For Timber",
     "title": "Company",
     "email": "info@starwood.sa",
-    "website": "http://www.starwood.sa",
-    "whatsapp": "966126930030"
-
+    "website": "www.starwood.sa",
+    "whatsapp": "+966126930030",
+    "statusBadge": "بطاقة موثقة",
+    "emailLabel": "البريد الإلكتروني",
+    "websiteLabel": "الموقع الإلكتروني",
+    "whatsappLabel": "الواتساب / الهاتف",
+    "vcardBtnText": "تحميل VCard",
+    "footer": "Starwood For Timber © 2026"
 }

@@ -3,44 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starwood</title>
+    <title>Starwood For Timber | Digital Card</title>
+    <!-- Modern Google Fonts: Tajawal & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Font Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
-                <i class="fas fa-moon" id="dark-mode-icon"></i>
-            </button>
-            <div class="logo-container">
-                <img src="logo.png" alt="Logo" class="profile-img" id="logo">
+
+    <!-- Ambient Liquid Mesh Background Blobs for 2026 Aesthetics -->
+    <div class="ambient-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Glassmorphism Card with 3D Tilt Effect -->
+        <article class="glass-card" id="card">
+            <!-- Glow Border Effect -->
+            <div class="card-glow-border"></div>
+
+            <!-- Top Header Actions -->
+            <div class="card-top-bar">
+                <div class="status-badge">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text" id="status-text">بطاقة موثقة</span>
+                </div>
+                <div class="top-controls">
+                    <button class="icon-btn" id="qr-btn" onclick="openQRModal()" title="رمز QR">
+                        <i class="fas fa-qrcode"></i>
+                    </button>
+                    <button class="icon-btn" id="share-btn" onclick="shareCard()" title="مشاركة الكارت">
+                        <i class="fas fa-share-nodes"></i>
+                    </button>
+                    <button class="icon-btn theme-toggle" onclick="toggleDarkMode()" title="تغيير المظهر">
+                        <i class="fas fa-moon" id="dark-mode-icon"></i>
+                    </button>
+                </div>
             </div>
-            <h1 id="name"></h1>
-            <h2 id="title"></h1>
+
+            <!-- Avatar / Logo Section -->
+            <div class="profile-header">
+                <div class="logo-wrapper">
+                    <div class="logo-ring"></div>
+                    <img src="../ayman website/logo.jpg" alt="Starwood Logo" class="profile-img" id="logo" onerror="this.onerror=null; this.src='../logo.jpeg';">
+                </div>
+                <h1 class="company-name" id="company">Starwood For Timber</h1>
+                <p class="person-title" id="title">Company</p>
+            </div>
+
+            <!-- Quick Action Grid (3 Buttons: WhatsApp, Email, Website) -->
+            <div class="quick-actions-bar">
+                <a id="quick-whatsapp" href="#" target="_blank" class="quick-action-item whatsapp" title="تواصل عبر الواتساب">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>واتساب</span>
+                </a>
+                <a id="quick-email" href="#" class="quick-action-item email" title="إرسال بريد">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>البريد</span>
+                </a>
+                <a id="quick-website" href="#" target="_blank" class="quick-action-item website" title="زيارة الموقع">
+                    <i class="fas fa-globe"></i>
+                    <span>الموقع</span>
+                </a>
+            </div>
+
+            <!-- Contact Details List -->
             <div class="contact-details">
-                <div class="detail-item">
-                    <i class="fas fa-envelope" aria-hidden="true"></i>
-                    <span class="value"><a id="email" href="mailto:" target="_blank"></a></span>
+
+                <!-- Primary Email Card -->
+                <div class="detail-card">
+                    <div class="detail-icon email-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label" id="label-email">البريد الإلكتروني</span>
+                        <a id="email" href="#" target="_blank" class="detail-value ltr"></a>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('email-val')" title="نسخ البريد">
+                        <i class="far fa-copy"></i>
+                    </button>
                 </div>
-                <div class="detail-item website-item">
-                    <i class="fas fa-globe" aria-hidden="true"></i>
-                    <span class="value"><a id="website" href="#" target="_blank"></a></span>
+
+                <!-- Website Card -->
+                <div class="detail-card">
+                    <div class="detail-icon web-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label" id="label-website">الموقع الإلكتروني</span>
+                        <a id="website" href="#" target="_blank" class="detail-value ltr"></a>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('website-val')" title="نسخ الرابط">
+                        <i class="far fa-copy"></i>
+                    </button>
                 </div>
-                <div class="detail-item">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                    <span class="value"><a id="whatsapp" href="#" target="_blank"></a></span>
+
+                <!-- WhatsApp Card -->
+                <div class="detail-card">
+                    <div class="detail-icon whatsapp-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label" id="label-whatsapp">الواتساب / الهاتف</span>
+                        <a id="whatsapp" href="#" target="_blank" class="detail-value ltr"></a>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('whatsapp-val')" title="نسخ الرقم">
+                        <i class="far fa-copy"></i>
+                    </button>
                 </div>
+
             </div>
-            <button class="vcard-btn" onclick="downloadVCard()">تحميل VCard</button>
+
+            <!-- Save vCard Button -->
+            <button class="vcard-btn" onclick="downloadVCard()">
+                <div class="btn-glow"></div>
+                <i class="fas fa-address-card"></i>
+                <span id="vcard-btn-text">تحميل VCard</span>
+                <i class="fas fa-arrow-down-long download-arrow"></i>
+            </button>
+
+            <!-- Footer Badge -->
+            <div class="card-footer">
+                <span id="footer-text"></span>
+            </div>
+        </article>
+    </main>
+
+    <!-- QR Code Modal -->
+    <div class="modal-backdrop" id="qr-modal" onclick="closeQRModal(event)">
+        <div class="modal-glass">
+            <button class="modal-close" onclick="closeQRModalDirect()">&times;</button>
+            <div class="modal-header">
+                <i class="fas fa-qrcode modal-icon"></i>
+                <h3>امسح الكود للتواصل</h3>
+                <p>امسح الكاميرا للحصول على بيانات الاتصال فوراً</p>
+            </div>
+            <div class="qr-container">
+                <img id="qr-image" src="" alt="جاري تحميل رمز QR...">
+            </div>
+            <button class="modal-btn" onclick="closeQRModalDirect()">إغلاق</button>
         </div>
     </div>
-    <script src="https://kit.fontawesome.com/a22154ddf9.js" crossorigin="anonymous"></script>
-    <script src="script.js"></script>
-    <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-      </script>
-      <script defer src="/_vercel/insights/script.js"></script>
 
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
