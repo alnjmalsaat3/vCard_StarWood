@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,14 @@
     <!-- Modern Google Fonts: Tajawal & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome 6 Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
     <!-- Ambient Liquid Mesh Background Blobs for 2026 Aesthetics -->
@@ -52,15 +56,17 @@
             <div class="profile-header">
                 <div class="logo-wrapper">
                     <div class="logo-ring"></div>
-                    <img src="logo.png" alt="Starwood Logo" class="profile-img" id="logo" onerror="this.onerror=null; this.src='../ayman website/logo.jpg';">
+                    <img src="logo.png" alt="Starwood Logo" class="profile-img" id="logo"
+                        onerror="this.onerror=null; this.src='../ayman website/logo.jpg';">
                 </div>
                 <h1 class="company-name" id="company">Starwood For Timber</h1>
                 <p class="person-title" id="title">Company</p>
             </div>
 
-            <!-- Quick Action Grid (3 Buttons: WhatsApp, Email, Website) -->
+            <!-- Quick Action Grid (4 Buttons: WhatsApp, Email, Website, Location) -->
             <div class="quick-actions-bar">
-                <a id="quick-whatsapp" href="#" target="_blank" class="quick-action-item whatsapp" title="تواصل عبر الواتساب">
+                <a id="quick-whatsapp" href="#" target="_blank" class="quick-action-item whatsapp"
+                    title="تواصل عبر الواتساب">
                     <i class="fab fa-whatsapp"></i>
                     <span>واتساب</span>
                 </a>
@@ -71,6 +77,11 @@
                 <a id="quick-website" href="#" target="_blank" class="quick-action-item website" title="زيارة الموقع">
                     <i class="fas fa-globe"></i>
                     <span>الموقع</span>
+                </a>
+                <a id="quick-location" href="#" target="_blank" class="quick-action-item location"
+                    title="عرض الموقع الجغرافي">
+                    <i class="fas fa-location-dot"></i>
+                    <span>العنوان</span>
                 </a>
             </div>
 
@@ -119,6 +130,36 @@
                     </button>
                 </div>
 
+                <!-- Location / Address Card (Plain Text with Copy Button) -->
+                <div class="detail-card">
+                    <div class="detail-icon location-icon">
+                        <i class="fas fa-location-dot"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label" id="label-location">العنوان</span>
+                        <span id="location" class="detail-value rtl-val">السعودية</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('location-val')" title="نسخ العنوان">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Commercial Registration Card -->
+                <div class="detail-card cr-card" onclick="openCRModal()" role="button" tabindex="0"
+                    title="اضغط لعرض السجل التجاري">
+                    <div class="detail-icon cr-icon">
+                        <i class="fas fa-file-shield"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label" id="label-cr">السجل التجاري</span>
+                        <span id="cr-text" class="detail-value rtl-val cr-link">عرض السجل التجاري</span>
+                    </div>
+                    <button class="copy-btn view-btn" onclick="event.stopPropagation(); openCRModal();"
+                        title="عرض السجل التجاري">
+                        <i class="far fa-eye"></i>
+                    </button>
+                </div>
+
             </div>
 
             <!-- Save vCard Button -->
@@ -145,16 +186,48 @@
                 <h3>امسح الكود للتواصل</h3>
                 <p>امسح الكاميرا للحصول على بيانات الاتصال فوراً</p>
             </div>
-            <div class="qr-container">
-                <img id="qr-image" src="" alt="جاري تحميل رمز QR...">
+            <div class="qr-container" id="qr-container">
             </div>
             <button class="modal-btn" onclick="closeQRModalDirect()">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- Commercial Registration Fullscreen Viewer -->
+    <div class="cr-fullscreen-modal" id="cr-modal" onclick="closeCRModal(event)">
+        <div class="cr-fullscreen-content">
+            <!-- Fullscreen Header -->
+            <div class="cr-fullscreen-header">
+                <div class="cr-header-info">
+                    <i class="fas fa-certificate cr-badge-icon"></i>
+                    <div>
+                        <h3 id="modal-cr-title">السجل التجاري</h3>
+                        <span id="modal-cr-desc">معاينة وثيقة السجل التجاري المعتمدة</span>
+                    </div>
+                </div>
+                <div class="cr-header-actions">
+                    <a id="cr-view-full" href="commercial-registration.png" target="_blank" rel="noopener noreferrer"
+                        class="cr-btn-external" title="عرض بالحجم الكامل في صفحة جديدة">
+                        <i class="fas fa-arrow-up-right-from-square"></i>
+                        <span>عرض بالحجم الكامل</span>
+                    </a>
+                    <button class="cr-btn-close" onclick="closeCRModalDirect()" title="إغلاق">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fullscreen Image Body -->
+            <div class="cr-image-wrapper">
+                <img id="cr-modal-image" src="commercial-registration.png" alt="وثيقة السجل التجاري">
+            </div>
         </div>
     </div>
 
     <!-- Toast Notification Container -->
     <div id="toast-container"></div>
 
+    <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

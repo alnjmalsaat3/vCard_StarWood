@@ -4,10 +4,17 @@
     "email": "info@starwood.sa",
     "website": "www.starwood.sa",
     "whatsapp": "+966126930030",
+    "location": "Address",
+    "locationUrl": "https://maps.app.goo.gl/",
+    "locationUrl": "https://maps.google.com/?q=Saudi+Arabia",
+    "commercialRegister": "commercial-registration.png",
     "statusBadge": "بطاقة موثقة",
     "emailLabel": "البريد الإلكتروني",
     "websiteLabel": "الموقع الإلكتروني",
     "whatsappLabel": "الواتساب / الهاتف",
+    "locationLabel": "العنوان",
+    "commercialRegisterLabel": "السجل التجاري",
+    "commercialRegisterText": "عرض السجل التجاري",
     "vcardBtnText": "تحميل VCard",
     "footer": "Starwood For Timber © 2026"
 }
