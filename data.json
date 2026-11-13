@@ -1,7 +1,7 @@
 {
     "defaultLang": "en",
-    "company": "Starwood For Timber",
-    "title": "Company",
+    "company": "Star Wood Company",
+    "title": "starwood",
     "email": "info@starwood.sa",
     "website": "www.starwood.sa",
     "whatsapp": "+966126930030",
@@ -42,7 +42,7 @@
         "crViewFull": "View Full Size"
     },
     "ar": {
-        "company": "Starwood For Timber",
+        "company": "شركة ستاروود",
         "title": "شركة",
         "location": "السعودية",
         "statusBadge": "بطاقة موثقة",
