@@ -1,6 +1,8 @@
 // Starwood For Timber - 2026 Interactive Script
 
 let elements = {};
+let rawData = null;
+let currentLang = localStorage.getItem('starwood_lang') || 'en'; // English is default!
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check saved theme
@@ -14,60 +16,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Apply initial language state attributes (RTL layout is fixed)
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = 'rtl';
+
     // Initialize 3D Parallax Tilt Effect
     init3DTilt();
 
     fetch('data.json')
         .then(response => {
             if (!response.ok) {
-                throw new Error(`فشل في تحميل ملف JSON: ${response.status}`);
+                throw new Error(`Failed to load data.json: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            elements = {
-                company: data.company || 'Starwood For Timber',
-                title: data.title || 'Company',
-                email: data.email || 'info@starwood.sa',
-                website: data.website || 'http://www.starwood.sa',
-                whatsapp: data.whatsapp || '966126930030',
-                location: data.location || 'السعودية',
-                locationUrl: data.locationUrl || '',
-                commercialRegister: data.commercialRegister || 'commercial-registration.png',
-                statusBadge: data.statusBadge || 'بطاقة موثقة',
-                emailLabel: data.emailLabel || 'البريد الإلكتروني',
-                websiteLabel: data.websiteLabel || 'الموقع الإلكتروني',
-                whatsappLabel: data.whatsappLabel || 'الواتساب / الهاتف',
-                locationLabel: data.locationLabel || 'العنوان',
-                commercialRegisterLabel: data.commercialRegisterLabel || 'السجل التجاري',
-                commercialRegisterText: data.commercialRegisterText || 'عرض السجل التجاري',
-                vcardBtnText: data.vcardBtnText || 'تحميل VCard',
-                footer: data.footer || 'Starwood For Timber © 2026'
-            };
+            rawData = data;
 
-            // Update Header & Labels
-            updateTextContent('company', elements.company);
-            updateTextContent('title', elements.title);
-            updateTextContent('footer-text', elements.footer);
-            updateTextContent('status-text', elements.statusBadge);
-            updateTextContent('label-whatsapp', elements.whatsappLabel);
-            updateTextContent('label-email', elements.emailLabel);
-            updateTextContent('label-website', elements.websiteLabel);
-            updateTextContent('label-location', elements.locationLabel);
-            updateTextContent('location', elements.location);
-            updateTextContent('label-cr', elements.commercialRegisterLabel);
-            updateTextContent('cr-text', elements.commercialRegisterText);
-            updateTextContent('vcard-btn-text', elements.vcardBtnText);
+            // Common global settings
+            elements.email = data.email || 'info@starwood.sa';
+            elements.website = data.website || 'http://www.starwood.sa';
+            elements.whatsapp = data.whatsapp || '966126930030';
+            elements.locationUrl = data.locationUrl || '';
+            elements.commercialRegister = data.commercialRegister || 'commercial-registration.png';
 
-            // Update Commercial Register image and modal links
-            const crImg = document.getElementById('cr-modal-image');
-            if (crImg && elements.commercialRegister) {
-                crImg.src = elements.commercialRegister;
-            }
-            const crFullLink = document.getElementById('cr-view-full');
-            if (crFullLink && elements.commercialRegister) {
-                crFullLink.href = elements.commercialRegister;
-            }
+            // Apply Language Bundle (defaults to English)
+            applyLanguage(currentLang);
 
             // Clean WhatsApp Number
             const cleanWhatsapp = elements.whatsapp.replace(/[^\d+]/g, '');
@@ -76,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rawWeb = elements.website || '';
             const webHref = /^https?:\/\//i.test(rawWeb) ? rawWeb : `http://${rawWeb}`;
 
-            // Quick Action Buttons (4 Buttons: WhatsApp, Email, Website, Location)
+            // Quick Action Buttons URLs
             const quickWhatsappEl = document.getElementById('quick-whatsapp');
             if (quickWhatsappEl) quickWhatsappEl.href = `https://wa.me/${cleanWhatsapp}`;
 
@@ -89,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const quickLocationEl = document.getElementById('quick-location');
             if (quickLocationEl) quickLocationEl.href = elements.locationUrl || '#';
 
-            // Long Detail Cards
+            // Detail Cards URLs & Text
             const whatsappEl = document.getElementById('whatsapp');
             if (whatsappEl) {
                 whatsappEl.href = `https://wa.me/${cleanWhatsapp}`;
@@ -107,18 +81,154 @@ document.addEventListener('DOMContentLoaded', () => {
                 websiteEl.href = webHref;
                 websiteEl.textContent = elements.website;
             }
+
+            // Commercial Register Image & Modal Link
+            const crImg = document.getElementById('cr-modal-image');
+            if (crImg && elements.commercialRegister) {
+                crImg.src = elements.commercialRegister;
+            }
+            const crFullLink = document.getElementById('cr-view-full');
+            if (crFullLink && elements.commercialRegister) {
+                crFullLink.href = elements.commercialRegister;
+            }
         })
         .catch(error => {
-            console.error('خطأ في تحميل البيانات:', error);
-            showToast('خطأ في تحميل بيانات data.json', 'fa-exclamation-triangle');
+            console.error('Data loading error:', error);
+            showToast(currentLang === 'ar' ? 'خطأ في تحميل بيانات data.json' : 'Error loading data.json', 'fa-exclamation-triangle');
         });
 });
 
 // Helper function to update text safely
 function updateTextContent(id, text) {
     const el = document.getElementById(id);
-    if (el) el.textContent = text;
+    if (el && text !== undefined) el.textContent = text;
 }
+
+// Apply Language Settings to UI
+function applyLanguage(lang) {
+    if (!rawData) return;
+    currentLang = lang;
+    const isAr = (lang === 'ar');
+    const bundle = (rawData[lang] && typeof rawData[lang] === 'object') ? rawData[lang] : rawData;
+
+    // Set HTML Attributes: Layout stays RTL permanently, only lang changes
+    document.documentElement.lang = lang;
+    document.documentElement.dir = 'rtl';
+
+    // Page Title
+    document.title = isAr 
+        ? `${bundle.company || 'Starwood For Timber'} | كارت رقمي` 
+        : `${bundle.company || 'Starwood For Timber'} | Digital Card`;
+
+    // Language Toggle Button: In English shows "AR", in Arabic shows "EN"
+    const langBtnText = document.getElementById('lang-btn-text');
+    if (langBtnText) {
+        langBtnText.textContent = isAr ? 'EN' : 'AR';
+    }
+    const langBtn = document.getElementById('lang-btn');
+    if (langBtn) {
+        langBtn.title = isAr ? 'Switch to English' : 'التحويل إلى العربية';
+    }
+
+    // Dynamic Elements Values
+    elements.company = bundle.company || rawData.company || 'Starwood For Timber';
+    elements.title = bundle.title || rawData.title || (isAr ? 'شركة' : 'Company');
+    elements.statusBadge = bundle.statusBadge || (isAr ? 'بطاقة موثقة' : 'Verified Card');
+    elements.emailLabel = bundle.emailLabel || (isAr ? 'البريد الإلكتروني' : 'Email Address');
+    elements.websiteLabel = bundle.websiteLabel || (isAr ? 'الموقع الإلكتروني' : 'Website');
+    elements.whatsappLabel = bundle.whatsappLabel || (isAr ? 'الواتساب / الهاتف' : 'WhatsApp / Phone');
+    elements.locationLabel = bundle.locationLabel || (isAr ? 'العنوان' : 'Address');
+    elements.location = bundle.location || (isAr ? 'السعودية' : 'Saudi Arabia');
+    elements.commercialRegisterLabel = bundle.commercialRegisterLabel || (isAr ? 'السجل التجاري' : 'Commercial Register');
+    elements.commercialRegisterText = bundle.commercialRegisterText || (isAr ? 'عرض السجل التجاري' : 'View Commercial Register');
+    elements.vcardBtnText = bundle.vcardBtnText || (isAr ? 'تحميل VCard' : 'Save Contact (vCard)');
+    elements.footer = bundle.footer || rawData.footer || 'Starwood For Timber © 2026';
+
+    // Update Header & Main Text
+    updateTextContent('company', elements.company);
+    updateTextContent('title', elements.title);
+    updateTextContent('status-text', elements.statusBadge);
+    updateTextContent('footer-text', elements.footer);
+    updateTextContent('label-email', elements.emailLabel);
+    updateTextContent('label-website', elements.websiteLabel);
+    updateTextContent('label-whatsapp', elements.whatsappLabel);
+    updateTextContent('label-location', elements.locationLabel);
+    updateTextContent('location', elements.location);
+    updateTextContent('label-cr', elements.commercialRegisterLabel);
+    updateTextContent('cr-text', elements.commercialRegisterText);
+    updateTextContent('vcard-btn-text', elements.vcardBtnText);
+
+    // Quick Actions Bar Texts
+    updateTextContent('quick-whatsapp-text', bundle.quickWhatsapp || (isAr ? 'واتساب' : 'WhatsApp'));
+    updateTextContent('quick-email-text', bundle.quickEmail || (isAr ? 'البريد' : 'Email'));
+    updateTextContent('quick-website-text', bundle.quickWebsite || (isAr ? 'الموقع' : 'Website'));
+    updateTextContent('quick-location-text', bundle.quickLocation || (isAr ? 'اللوكيشن' : 'Location'));
+
+    // QR Modal
+    updateTextContent('qr-modal-title', bundle.qrModalTitle || (isAr ? 'امسح الكود للتواصل' : 'Scan to Connect'));
+    updateTextContent('qr-modal-desc', bundle.qrModalDesc || (isAr ? 'امسح الكاميرا للحصول على بيانات الاتصال فوراً' : 'Scan with your camera to access contact details'));
+    updateTextContent('qr-modal-close', bundle.qrModalClose || (isAr ? 'إغلاق' : 'Close'));
+
+    // Commercial Registration Modal
+    updateTextContent('modal-cr-title', bundle.crModalTitle || (isAr ? 'السجل التجاري' : 'Commercial Registration'));
+    updateTextContent('modal-cr-desc', bundle.crModalDesc || (isAr ? 'معاينة وثيقة السجل التجاري المعتمدة' : 'Official Commercial Registration Certificate'));
+    updateTextContent('modal-cr-view-full-text', bundle.crViewFull || (isAr ? 'عرض بالحجم الكامل' : 'View Full Size'));
+    const crCloseBtn = document.getElementById('modal-cr-close');
+    if (crCloseBtn) crCloseBtn.title = isAr ? 'إغلاق' : 'Close';
+
+    // Update Button Tooltips
+    const qrBtn = document.getElementById('qr-btn');
+    if (qrBtn) qrBtn.title = isAr ? 'رمز QR' : 'QR Code';
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) shareBtn.title = isAr ? 'مشاركة الكارت' : 'Share Card';
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.title = isAr ? 'تغيير المظهر' : 'Toggle Theme';
+
+    const copyEmail = document.getElementById('copy-email-btn');
+    if (copyEmail) copyEmail.title = isAr ? 'نسخ البريد' : 'Copy Email';
+    const copyWeb = document.getElementById('copy-web-btn');
+    if (copyWeb) copyWeb.title = isAr ? 'نسخ الرابط' : 'Copy Link';
+    const copyWa = document.getElementById('copy-wa-btn');
+    if (copyWa) copyWa.title = isAr ? 'نسخ الرقم' : 'Copy Number';
+    const copyLoc = document.getElementById('copy-loc-btn');
+    if (copyLoc) copyLoc.title = isAr ? 'نسخ العنوان' : 'Copy Address';
+}
+
+// Toggle Language Function with Smooth Blur Transition
+let isLangSwitching = false;
+
+window.toggleLanguage = function () {
+    if (isLangSwitching) return;
+    isLangSwitching = true;
+
+    const card = document.getElementById('card');
+    const langBtn = document.getElementById('lang-btn');
+
+    if (langBtn) {
+        langBtn.classList.add('active-pulse');
+    }
+
+    if (card) {
+        card.classList.add('lang-transition');
+    }
+
+    setTimeout(() => {
+        currentLang = (currentLang === 'en') ? 'ar' : 'en';
+        localStorage.setItem('starwood_lang', currentLang);
+        applyLanguage(currentLang);
+        showToast(currentLang === 'en' ? 'Switched to English' : 'تم التحويل إلى اللغة العربية', 'fa-language');
+
+        setTimeout(() => {
+            if (card) {
+                card.classList.remove('lang-transition');
+            }
+            if (langBtn) {
+                langBtn.classList.remove('active-pulse');
+            }
+            isLangSwitching = false;
+        }, 50);
+    }, 220);
+};
 
 // 3D Parallax Tilt Effect
 function init3DTilt() {
@@ -128,6 +238,7 @@ function init3DTilt() {
     if (!card || !container) return;
 
     container.addEventListener('mousemove', (e) => {
+        if (card.classList.contains('lang-transition')) return;
         const rect = card.getBoundingClientRect();
         const cardCenterX = rect.left + rect.width / 2;
         const cardCenterY = rect.top + rect.height / 2;
@@ -148,6 +259,7 @@ function init3DTilt() {
 
 // Save vCard Functionality for Starwood For Timber
 window.downloadVCard = function () {
+    const isAr = (currentLang === 'ar');
     const vCardData = [
         'BEGIN:VCARD',
         'VERSION:3.0',
@@ -171,7 +283,10 @@ window.downloadVCard = function () {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    showToast('تم تحميل كارت Starwood For Timber (vCard) بنجاح!', 'fa-address-card');
+    const toastMsg = isAr 
+        ? 'تم تحميل كارت Starwood For Timber (vCard) بنجاح!' 
+        : 'Contact card (vCard) downloaded successfully!';
+    showToast(toastMsg, 'fa-address-card');
 };
 
 // Theme Toggle
@@ -235,36 +350,39 @@ function fallbackExecCopy(text, successMessage, iconClass) {
 
 // Copy Text Helper with Toast Feedback
 window.copyText = function (type) {
+    const isAr = (currentLang === 'ar');
     let textToCopy = '';
     let label = '';
 
     switch (type) {
         case 'whatsapp-val':
             textToCopy = elements.whatsapp || '';
-            label = 'رقم الواتساب';
+            label = isAr ? 'رقم الواتساب' : 'WhatsApp number';
             break;
         case 'email-val':
             textToCopy = elements.email || '';
-            label = 'البريد الإلكتروني';
+            label = isAr ? 'البريد الإلكتروني' : 'Email address';
             break;
         case 'website-val':
             textToCopy = elements.website || '';
-            label = 'رابط الموقع';
+            label = isAr ? 'رابط الموقع' : 'Website link';
             break;
         case 'location-val':
             textToCopy = elements.location || '';
-            label = 'العنوان';
+            label = isAr ? 'العنوان' : 'Address';
             break;
         default:
             textToCopy = '';
     }
 
     if (!textToCopy) return;
-    copyToClipboard(textToCopy, `تم نسخ ${label} بنجاح!`, 'fa-check');
+    const toastMsg = isAr ? `تم نسخ ${label} بنجاح!` : `${label} copied successfully!`;
+    copyToClipboard(textToCopy, toastMsg, 'fa-check');
 };
 
 // Share Card (Reliable on Desktop, Mobile, Localhost & Online)
 window.shareCard = function () {
+    const isAr = (currentLang === 'ar');
     let shareUrl = window.location.href;
     const isLocal = window.location.protocol === 'file:' || 
                     window.location.hostname === 'localhost' || 
@@ -276,17 +394,18 @@ window.shareCard = function () {
     }
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const toastMsg = isAr ? 'تم نسخ رابط الكارت للحافظة!' : 'Card link copied to clipboard!';
 
     if (navigator.share && isMobile && window.isSecureContext) {
         navigator.share({
             title: elements.company || 'Starwood For Timber',
             text: elements.title || 'Digital Business Card',
             url: shareUrl
-        }).catch(err => {
-            copyToClipboard(shareUrl, 'تم نسخ رابط الكارت للحافظة!', 'fa-link');
+        }).catch(() => {
+            copyToClipboard(shareUrl, toastMsg, 'fa-link');
         });
     } else {
-        copyToClipboard(shareUrl, 'تم نسخ رابط الكارت للحافظة!', 'fa-link');
+        copyToClipboard(shareUrl, toastMsg, 'fa-link');
     }
 };
 
